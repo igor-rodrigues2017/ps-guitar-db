@@ -54,10 +54,7 @@ public class ModelRepository {
 	 */
 	public List<Model> getModelsInPriceRange(BigDecimal lowest, BigDecimal highest) {
 		@SuppressWarnings("unchecked")
-		List<Model> mods = entityManager
-				.createQuery("select m from Model m where m.price >= :lowest and m.price <= :highest")
-				.setParameter("lowest", lowest)
-				.setParameter("highest", highest).getResultList();
+		List<Model> mods = modelJpaRepository.findByPriceGreaterThanEqualAndPriceLessThanEqual(lowest, highest);
 		return mods;
 	}
 

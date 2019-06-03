@@ -53,4 +53,10 @@ public class ModelTypePersistenceTests {
         ModelType mt = modelTypeJpaRepository.findOne(1L);
         assertEquals("Dreadnought Acoustic", mt.getName());
     }
+
+    @Test
+    public void testForNull(){
+        List<ModelType> byNameNotNull = modelTypeJpaRepository.findByNameNotNull();
+        assertEquals(7, byNameNotNull.size());
+    }
 }

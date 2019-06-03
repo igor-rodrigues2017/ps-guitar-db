@@ -8,11 +8,22 @@ import java.util.List;
 
 @Repository
 public interface LocationJpaRepository extends JpaRepository<Location, Long> {
-    List<Location> findLocationByStateLike(String stateName);
+    List<Location> findByStateLike(String stateName);
 
-    List<Location> findLocationByStateLikeOrCountryLike(String stateName, String countryName);
+    List<Location> findByStateNotLikeOrderByStateDesc(String notContain);
 
-    List<Location> findLocationByCountry(String countryName);
+    List<Location> findByStateLikeOrStateLike(String stateName1, String stateName2);
 
-    List<Location> findLocationByStateAndCountry(String stateName, String countryName);
+    List<Location> findByCountry(String countryName);
+
+    List<Location> findByStateAndCountry(String stateName, String countryName);
+
+    List<Location> findByStateStartingWithIgnoreCase(String startWith); //AI%
+
+    List<Location> findByStateContainingIgnoreCase(String contains); //%in%
+
+    List<Location> findByStateEndingWithIgnoreCase(String endWith); //%ia
+
+    Location findFirstByStateStartingWithIgnoreCase(String startWith);
+
 }

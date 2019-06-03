@@ -52,26 +52,38 @@ public class LocationPersistenceTests {
 
 	@Test
 	public void testFindWithLike() throws Exception {
-		List<Location> locs = locationJpaRepository.findLocationByStateLike("New%");
+		List<Location> locs = locationJpaRepository.findByStateLike("New%");
 		assertEquals(4, locs.size());
 	}
 
 	@Test
-	public void testFindStateLikeOrCountryLike(){
-		List<Location> locations = locationJpaRepository.findLocationByStateLikeOrCountryLike("Id%", " ");
+	public void testFindStateLikeOrStateLike(){
+		List<Location> locations = locationJpaRepository.findByStateLikeOrStateLike("Id%", "New%");
 		assertTrue(locations.size() > 0);
 	}
 
 	@Test
 	public void testFindByCountry(){
-		List<Location> loc = locationJpaRepository.findLocationByCountry("United States");
+		List<Location> loc = locationJpaRepository.findByCountry("United States");
 		assertEquals("United States", loc.get(0).getCountry());
 	}
 
 	@Test
 	public void testFindByStateAndCountry(){
-		List<Location> loc = locationJpaRepository.findLocationByStateAndCountry("New York", "United States");
+		List<Location> loc = locationJpaRepository.findByStateAndCountry("New York", "United States");
 		assertEquals("New York", loc.get(0).getState());
+	}
+
+	@Test
+	public void testFindStartEndAndContainsKeyWords(){
+		List<Location> locs = locationJpaRepository.findByStateContainingIgnoreCase("york");
+		assertEquals("New York", locs.get(0).getState());
+
+		locs = locationJpaRepository.findByStateStartingWithIgnoreCase("ariz");
+		assertEquals("Arizona", locs.get(0).getState());
+
+		locs = locationJpaRepository.findByStateEndingWithIgnoreCase("orida");
+		assertEquals("Florida", locs.get(0).getState());
 	}
 
 	@Test
@@ -84,5 +96,21 @@ public class LocationPersistenceTests {
 		assertEquals(1, arizona.getManufacturers().size());
 		
 		assertEquals("Fender Musical Instruments Corporation", arizona.getManufacturers().get(0).getName());
+	}
+
+	@Test
+	public void testNotContainInOrder(){
+		List<Location> locs = locationJpaRepository.findByStateNotLikeOrderByStateDesc("New%");
+		locs.forEach(location -> {
+			System.out.println(location.getState());
+		});
+		assertEquals("W", locs.get(0).getState().substring(0, 1));
+
+	}
+
+	@Test
+	public void testFindFirst(){
+		Location first = locationJpaRepository.findFirstByStateStartingWithIgnoreCase("New");
+		assertEquals("New Hampshire", first.getState());
 	}
 }
