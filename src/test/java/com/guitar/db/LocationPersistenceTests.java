@@ -101,9 +101,7 @@ public class LocationPersistenceTests {
 	@Test
 	public void testNotContainInOrder(){
 		List<Location> locs = locationJpaRepository.findByStateNotLikeOrderByStateDesc("New%");
-		locs.forEach(location -> {
-			System.out.println(location.getState());
-		});
+		locs.forEach(location -> System.out.println(location.getState()));
 		assertEquals("W", locs.get(0).getState().substring(0, 1));
 
 	}
