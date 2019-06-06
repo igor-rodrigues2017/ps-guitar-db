@@ -9,6 +9,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.guitar.db.model.Model;
@@ -61,9 +65,12 @@ public class ModelRepository {
 	/**
 	 * Custom finder
 	 */
-	public List<Model> getModelsByPriceRangeAndWoodType(BigDecimal lowest, BigDecimal highest, String wood) {
-		@SuppressWarnings("unchecked")
-		List<Model> mods = modelJpaRepository.queryByPriceRangeAndWoodType(lowest, highest, "%" + wood + "%");
+	public Page<Model> getModelsByPriceRangeAndWoodType(BigDecimal lowest, BigDecimal highest, String wood) {
+		//organniza por nome;
+		Sort sort = new Sort(Sort.Direction.ASC, "name");
+		//inicia na página 0 e contém 2 elementos, o organiza.
+		Pageable page = new PageRequest(0, 2, sort);
+		Page<Model> mods = modelJpaRepository.queryByPriceRangeAndWoodType(lowest, highest, "%" + wood + "%", page);
 		return mods;
 	}
 
